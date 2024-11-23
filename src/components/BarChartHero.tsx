@@ -4,70 +4,42 @@ import { BarChart } from "@/components/BarChart"
 
 const chartdata = [
     {
-        date: "Jan 23",
-        SolarPanels: 2890,
-        Inverters: 2338,
+        date: "Sunday",
+        Studying: 4,
     },
     {
-        date: "Feb 23",
-        SolarPanels: 2756,
-        Inverters: 2103,
+        date: "Monday",
+        Studying: 2,
     },
     {
-        date: "Mar 23",
-        SolarPanels: 3322,
-        Inverters: 2194,
+        date: "Tuesday",
+        Studying: 3.5,
     },
     {
-        date: "Apr 23",
-        SolarPanels: 3470,
-        Inverters: 2108,
+        date: "Wednesday",
+        Studying: 3,
     },
     {
-        date: "May 23",
-        SolarPanels: 3475,
-        Inverters: 1812,
+        date: "Thursday",
+        Studying: 0,
     },
     {
-        date: "Jun 23",
-        SolarPanels: 3129,
-        Inverters: 1726,
+        date: "Friday",
+        Studying: 8,
     },
     {
-        date: "Jul 23",
-        SolarPanels: 3490,
-        Inverters: 1982,
+        date: "Saturday",
+        Studying: 1.4746384589,
     },
     {
-        date: "Aug 23",
-        SolarPanels: 2903,
-        Inverters: 2012,
-    },
-    {
-        date: "Sep 23",
-        SolarPanels: 2643,
-        Inverters: 2342,
-    },
-    {
-        date: "Oct 23",
-        SolarPanels: 2837,
-        Inverters: 2473,
-    },
-    {
-        date: "Nov 23",
-        SolarPanels: 2954,
-        Inverters: 3848,
-    },
-    {
-        date: "Dec 23",
-        SolarPanels: 3239,
-        Inverters: 3736,
+        date: "Sunday",
+        Studying: 5,
     },
 ]
 
 export const BarChartHero = () => {
     const valueFormatter = (number: number) =>
-        `$${Intl.NumberFormat("us").format(number).toString()}`
+        `${Intl.NumberFormat("us").format(number).toString()} hours`
 
     const onValueChange = (v: any) => {
         console.log(v)
@@ -78,7 +50,7 @@ export const BarChartHero = () => {
             className="h-80"
             data={chartdata}
             index="date"
-            categories={["SolarPanels", "Inverters"]}
+            categories={["Studying"]}
             valueFormatter={valueFormatter}
             onValueChange={onValueChange}
         />
