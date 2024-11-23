@@ -10,7 +10,6 @@ import {
   CartesianGrid,
   Label,
   BarChart as RechartsBarChart,
-  Legend as RechartsLegend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -88,339 +87,6 @@ const renderShape = (
   )
 }
 
-//#region Legend
-
-interface LegendItemProps {
-  name: string
-  color: AvailableChartColorsKeys
-  onClick?: (name: string, color: AvailableChartColorsKeys) => void
-  activeLegend?: string
-}
-
-const LegendItem = ({
-  name,
-  color,
-  onClick,
-  activeLegend,
-}: LegendItemProps) => {
-  const hasOnValueChange = !!onClick
-  return (
-    <li
-      className={cn(
-        // base
-        "group inline-flex flex-nowrap items-center gap-1.5 whitespace-nowrap rounded px-2 py-1 transition",
-        hasOnValueChange
-          ? "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-          : "cursor-default",
-      )}
-      onClick={(e) => {
-        e.stopPropagation()
-        onClick?.(name, color)
-      }}
-    >
-      <span
-        className={cn(
-          "size-2 shrink-0 rounded-sm",
-          getColorClassName(color, "bg"),
-          activeLegend && activeLegend !== name ? "opacity-40" : "opacity-100",
-        )}
-        aria-hidden={true}
-      />
-      <p
-        className={cn(
-          // base
-          "truncate whitespace-nowrap text-xs",
-          // text color
-          "text-gray-700 dark:text-gray-300",
-          hasOnValueChange &&
-            "group-hover:text-gray-900 dark:group-hover:text-gray-50",
-          activeLegend && activeLegend !== name ? "opacity-40" : "opacity-100",
-        )}
-      >
-        {name}
-      </p>
-    </li>
-  )
-}
-
-interface ScrollButtonProps {
-  icon: React.ElementType
-  onClick?: () => void
-  disabled?: boolean
-}
-
-const ScrollButton = ({ icon, onClick, disabled }: ScrollButtonProps) => {
-  const Icon = icon
-  const [isPressed, setIsPressed] = React.useState(false)
-  const intervalRef = React.useRef<NodeJS.Timeout | null>(null)
-
-  React.useEffect(() => {
-    if (isPressed) {
-      intervalRef.current = setInterval(() => {
-        onClick?.()
-      }, 300)
-    } else {
-      clearInterval(intervalRef.current as NodeJS.Timeout)
-    }
-    return () => clearInterval(intervalRef.current as NodeJS.Timeout)
-  }, [isPressed, onClick])
-
-  React.useEffect(() => {
-    if (disabled) {
-      clearInterval(intervalRef.current as NodeJS.Timeout)
-      setIsPressed(false)
-    }
-  }, [disabled])
-
-  return (
-    <button
-      type="button"
-      className={cn(
-        // base
-        "group inline-flex size-5 items-center truncate rounded transition",
-        disabled
-          ? "cursor-not-allowed text-gray-400 dark:text-gray-600"
-          : "cursor-pointer text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50",
-      )}
-      disabled={disabled}
-      onClick={(e) => {
-        e.stopPropagation()
-        onClick?.()
-      }}
-      onMouseDown={(e) => {
-        e.stopPropagation()
-        setIsPressed(true)
-      }}
-      onMouseUp={(e) => {
-        e.stopPropagation()
-        setIsPressed(false)
-      }}
-    >
-      <Icon className="size-full" aria-hidden="true" />
-    </button>
-  )
-}
-
-interface LegendProps extends React.OlHTMLAttributes<HTMLOListElement> {
-  categories: string[]
-  colors?: AvailableChartColorsKeys[]
-  onClickLegendItem?: (category: string, color: string) => void
-  activeLegend?: string
-  enableLegendSlider?: boolean
-}
-
-type HasScrollProps = {
-  left: boolean
-  right: boolean
-}
-
-const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
-  const {
-    categories,
-    colors = AvailableChartColors,
-    className,
-    onClickLegendItem,
-    activeLegend,
-    enableLegendSlider = false,
-    ...other
-  } = props
-  const scrollableRef = React.useRef<HTMLInputElement>(null)
-  const scrollButtonsRef = React.useRef<HTMLDivElement>(null)
-  const [hasScroll, setHasScroll] = React.useState<HasScrollProps | null>(null)
-  const [isKeyDowned, setIsKeyDowned] = React.useState<string | null>(null)
-  const intervalRef = React.useRef<NodeJS.Timeout | null>(null)
-
-  const checkScroll = React.useCallback(() => {
-    const scrollable = scrollableRef?.current
-    if (!scrollable) return
-
-    const hasLeftScroll = scrollable.scrollLeft > 0
-    const hasRightScroll =
-      scrollable.scrollWidth - scrollable.clientWidth > scrollable.scrollLeft
-
-    setHasScroll({ left: hasLeftScroll, right: hasRightScroll })
-  }, [setHasScroll])
-
-  const scrollToTest = React.useCallback(
-    (direction: "left" | "right") => {
-      const element = scrollableRef?.current
-      const scrollButtons = scrollButtonsRef?.current
-      const scrollButtonsWith = scrollButtons?.clientWidth ?? 0
-      const width = element?.clientWidth ?? 0
-
-      if (element && enableLegendSlider) {
-        element.scrollTo({
-          left:
-            direction === "left"
-              ? element.scrollLeft - width + scrollButtonsWith
-              : element.scrollLeft + width - scrollButtonsWith,
-          behavior: "smooth",
-        })
-        setTimeout(() => {
-          checkScroll()
-        }, 400)
-      }
-    },
-    [enableLegendSlider, checkScroll],
-  )
-
-  React.useEffect(() => {
-    const keyDownHandler = (key: string) => {
-      if (key === "ArrowLeft") {
-        scrollToTest("left")
-      } else if (key === "ArrowRight") {
-        scrollToTest("right")
-      }
-    }
-    if (isKeyDowned) {
-      keyDownHandler(isKeyDowned)
-      intervalRef.current = setInterval(() => {
-        keyDownHandler(isKeyDowned)
-      }, 300)
-    } else {
-      clearInterval(intervalRef.current as NodeJS.Timeout)
-    }
-    return () => clearInterval(intervalRef.current as NodeJS.Timeout)
-  }, [isKeyDowned, scrollToTest])
-
-  const keyDown = (e: KeyboardEvent) => {
-    e.stopPropagation()
-    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-      e.preventDefault()
-      setIsKeyDowned(e.key)
-    }
-  }
-  const keyUp = (e: KeyboardEvent) => {
-    e.stopPropagation()
-    setIsKeyDowned(null)
-  }
-
-  React.useEffect(() => {
-    const scrollable = scrollableRef?.current
-    if (enableLegendSlider) {
-      checkScroll()
-      scrollable?.addEventListener("keydown", keyDown)
-      scrollable?.addEventListener("keyup", keyUp)
-    }
-
-    return () => {
-      scrollable?.removeEventListener("keydown", keyDown)
-      scrollable?.removeEventListener("keyup", keyUp)
-    }
-  }, [checkScroll, enableLegendSlider])
-
-  return (
-    <ol
-      ref={ref}
-      className={cn("relative overflow-hidden", className)}
-      {...other}
-    >
-      <div
-        ref={scrollableRef}
-        tabIndex={0}
-        className={cn(
-          "flex h-full",
-          enableLegendSlider
-            ? hasScroll?.right || hasScroll?.left
-              ? "snap-mandatory items-center overflow-auto pl-4 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-              : ""
-            : "flex-wrap",
-        )}
-      >
-        {categories.map((category, index) => (
-          <LegendItem
-            key={`item-${index}`}
-            name={category}
-            color={colors[index] as AvailableChartColorsKeys}
-            onClick={onClickLegendItem}
-            activeLegend={activeLegend}
-          />
-        ))}
-      </div>
-      {enableLegendSlider && (hasScroll?.right || hasScroll?.left) ? (
-        <>
-          <div
-            className={cn(
-              // base
-              "absolute bottom-0 right-0 top-0 flex h-full items-center justify-center pr-1",
-              // background color
-              "bg-white dark:bg-gray-950",
-            )}
-          >
-            <ScrollButton
-              icon={RiArrowLeftSLine}
-              onClick={() => {
-                setIsKeyDowned(null)
-                scrollToTest("left")
-              }}
-              disabled={!hasScroll?.left}
-            />
-            <ScrollButton
-              icon={RiArrowRightSLine}
-              onClick={() => {
-                setIsKeyDowned(null)
-                scrollToTest("right")
-              }}
-              disabled={!hasScroll?.right}
-            />
-          </div>
-        </>
-      ) : null}
-    </ol>
-  )
-})
-
-Legend.displayName = "Legend"
-
-const ChartLegend = (
-  { payload }: any,
-  categoryColors: Map<string, AvailableChartColorsKeys>,
-  setLegendHeight: React.Dispatch<React.SetStateAction<number>>,
-  activeLegend: string | undefined,
-  onClick?: (category: string, color: string) => void,
-  enableLegendSlider?: boolean,
-  legendPosition?: "left" | "center" | "right",
-  yAxisWidth?: number,
-) => {
-  const legendRef = React.useRef<HTMLDivElement>(null)
-
-  useOnWindowResize(() => {
-    const calculateHeight = (height: number | undefined) =>
-      height ? Number(height) + 15 : 60
-    setLegendHeight(calculateHeight(legendRef.current?.clientHeight))
-  })
-
-  const filteredPayload = payload.filter((item: any) => item.type !== "none")
-
-  const paddingLeft =
-    legendPosition === "left" && yAxisWidth ? yAxisWidth - 8 : 0
-
-  return (
-    <div
-      style={{ paddingLeft: paddingLeft }}
-      ref={legendRef}
-      className={cn(
-        "flex items-center",
-        { "justify-center": legendPosition === "center" },
-        {
-          "justify-start": legendPosition === "left",
-        },
-        { "justify-end": legendPosition === "right" },
-      )}
-    >
-      <Legend
-        categories={filteredPayload.map((entry: any) => entry.value)}
-        colors={filteredPayload.map((entry: any) =>
-          categoryColors.get(entry.value),
-        )}
-        onClickLegendItem={onClick}
-        activeLegend={activeLegend}
-        enableLegendSlider={enableLegendSlider}
-      />
-    </div>
-  )
-}
-
 //#region Tooltip
 
 type TooltipProps = Pick<ChartTooltipProps, "active" | "payload" | "label">
@@ -450,6 +116,8 @@ const ChartTooltip = ({
   if (active && payload && payload.length) {
     return (
       <div
+
+      //Box Outline and Colouring
         className={cn(
           // base
           "rounded-md border text-sm shadow-md",
@@ -458,6 +126,7 @@ const ChartTooltip = ({
           // background color
           "bg-white dark:bg-gray-950",
         )}
+      //Otherthing?
       >
         <div className={cn("border-b border-inherit px-4 py-2")}>
           <p
@@ -611,42 +280,6 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       return `${(value * 100).toFixed(0)}%`
     }
 
-    function onBarClick(data: any, _: any, event: React.MouseEvent) {
-      event.stopPropagation()
-      if (!onValueChange) return
-      if (deepEqual(activeBar, { ...data.payload, value: data.value })) {
-        setActiveLegend(undefined)
-        setActiveBar(undefined)
-        onValueChange?.(null)
-      } else {
-        setActiveLegend(data.tooltipPayload?.[0]?.dataKey)
-        setActiveBar({
-          ...data.payload,
-          value: data.value,
-        })
-        onValueChange?.({
-          eventType: "bar",
-          categoryClicked: data.tooltipPayload?.[0]?.dataKey,
-          ...data.payload,
-        })
-      }
-    }
-
-    function onCategoryClick(dataKey: string) {
-      if (!hasOnValueChange) return
-      if (dataKey === activeLegend && !activeBar) {
-        setActiveLegend(undefined)
-        onValueChange?.(null)
-      } else {
-        setActiveLegend(dataKey)
-        onValueChange?.({
-          eventType: "category",
-          categoryClicked: dataKey,
-        })
-      }
-      setActiveBar(undefined)
-    }
-
     return (
       <div
         ref={forwardedRef}
@@ -657,15 +290,6 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         <ResponsiveContainer>
           <RechartsBarChart
             data={data}
-            onClick={
-              hasOnValueChange && (activeLegend || activeBar)
-                ? () => {
-                    setActiveBar(undefined)
-                    setActiveLegend(undefined)
-                    onValueChange?.(null)
-                  }
-                : undefined
-            }
             margin={{
               bottom: xAxisLabel ? 30 : undefined,
               left: yAxisLabel ? 20 : undefined,
@@ -691,13 +315,6 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
               }}
               fill=""
               stroke=""
-              className={cn(
-                // base
-                "text-xs",
-                // text fill
-                "fill-gray-500 dark:fill-gray-500",
-                { "mt-4": layout !== "vertical" },
-              )}
               tickLine={false}
               axisLine={false}
               minTickGap={tickGap}
@@ -747,7 +364,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
               tick={{
                 transform:
                   layout !== "vertical"
-                    ? "translate(-3, 0)"
+                    ? "translate(0, 0)"
                     : "translate(0, 0)",
               }}
               {...(layout !== "vertical"
@@ -803,16 +420,6 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                     }))
                   : []
 
-                if (
-                  tooltipCallback &&
-                  (active !== prevActiveRef.current ||
-                    label !== prevLabelRef.current)
-                ) {
-                  tooltipCallback({ active, payload: cleanPayload, label })
-                  prevActiveRef.current = active
-                  prevLabelRef.current = label
-                }
-
                 return showTooltip && active ? (
                   CustomTooltip ? (
                     <CustomTooltip
@@ -831,27 +438,6 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                 ) : null
               }}
             />
-            {showLegend ? (
-              <RechartsLegend
-                verticalAlign="top"
-                height={legendHeight}
-                content={({ payload }) =>
-                  ChartLegend(
-                    { payload },
-                    categoryColors,
-                    setLegendHeight,
-                    activeLegend,
-                    hasOnValueChange
-                      ? (clickedLegendItem: string) =>
-                          onCategoryClick(clickedLegendItem)
-                      : undefined,
-                    enableLegendSlider,
-                    legendPosition,
-                    yAxisWidth,
-                  )
-                }
-              />
-            ) : null}
             {categories.map((category) => (
               <Bar
                 className={cn(
@@ -871,7 +457,6 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
                 shape={(props: any) =>
                   renderShape(props, activeBar, activeLegend, layout)
                 }
-                onClick={onBarClick}
               />
             ))}
           </RechartsBarChart>
