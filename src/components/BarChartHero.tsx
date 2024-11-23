@@ -1,6 +1,7 @@
 "use client"
 
 import { BarChart } from "@/components/BarChart"
+import { AvailableChartColors } from "@/lib/chartUtils"
 
 const chartdata = [
     {
@@ -9,7 +10,7 @@ const chartdata = [
     },
     {
         date: "Monday",
-        Studying: 2,
+        Studying: 0.28,
     },
     {
         date: "Tuesday",
@@ -31,15 +32,19 @@ const chartdata = [
         date: "Saturday",
         Studying: 1.4746384589,
     },
-    {
-        date: "Sunday",
-        Studying: 5,
-    },
 ]
 
 export const BarChartHero = () => {
-    const valueFormatter = (number: number) =>
-        `${Intl.NumberFormat("us").format(number).toString()} hours`
+    const valueFormatter = (number: number) => {
+        const hours = Math.floor(number) // Get the whole number of hours
+        const minutes = Math.round((number - hours) * 60) // Get the remaining minutes
+        if (minutes == 0)
+            return `${hours} hours`;
+        else if (hours ==0)
+            return `${minutes} minutes`;
+        else
+            return `${hours} hours ${minutes} minutes`;
+    }
 
     const onValueChange = (v: any) => {
         console.log(v)
@@ -47,12 +52,12 @@ export const BarChartHero = () => {
 
     return (
         <BarChart
-            className="h-80"
             data={chartdata}
             index="date"
             categories={["Studying"]}
             valueFormatter={valueFormatter}
-            onValueChange={onValueChange}
-        />
+            onValueChange={onValueChange} 
+            colors={AvailableChartColors} />
+
     )
 }
