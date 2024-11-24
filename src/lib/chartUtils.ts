@@ -87,7 +87,7 @@ export const getColorClassName = (
   const fallbackColor = {
     bg: "bg-gray-500",
     stroke: "stroke-gray-500",
-    fill: "fill-gray-500",
+    fill: "fill-blue-500",
     text: "text-gray-500",
   }
   return chartColors[color]?.[type] ?? fallbackColor[type]
