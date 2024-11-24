@@ -8,7 +8,7 @@ export default function Home() {
 
     <div className='py-20 mx-auto text-center flex flex-col items-center max-w-3xl'>
        
-       <h1 className={`text-7xl font-bold tracking-tight font-serif`}> 
+       <h1 className={`text-7xl font-bold tracking-tight font-mono`}> 
           Watch Me Cook
         </h1>
        

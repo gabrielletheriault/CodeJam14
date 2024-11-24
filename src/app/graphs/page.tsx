@@ -29,10 +29,10 @@ const Page = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
+    <div className="max-w-7xl mx-auto p-6 space-y-6 font-mono">
       <div style={{ marginTop: "90px" }}></div>
       <div style={{ marginTop: "90px" }}></div>
-      <h1 className="text-[64px] font-bold text-left">This Week at a Glance</h1>
+      <h1 className="text-[64px] font-bold text-left font-mono">This Week at a Glance</h1>
       <div style={{ marginTop: "40px" }}></div>
 
       {/* Render the Tabs component, passing the tabs array */}

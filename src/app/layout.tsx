@@ -19,13 +19,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn("relative h-full font-sans antiliased", inter.className)}>
+        className={cn("relative h-full font-mono", inter.className)}>
           <main className="relative flex flex-col min-h-screen">
             <div className="flex-grow flex-1">
               <Tab/>
               {children}
             </div>
           </main>
+          
       </body>
     </html>
   );
