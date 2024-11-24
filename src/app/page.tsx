@@ -32,7 +32,8 @@ const Page = () => {
           })
         });
 
-        response.status === 201 && router.push('/graphs');
+        response.status === 201 && router.push('/timer');
+        router.refresh()
         
 
       } catch (e) {
