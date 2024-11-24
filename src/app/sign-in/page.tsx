@@ -75,7 +75,7 @@ const Page = () => {
                               />
                           </div>
 
-                          <Button>Register</Button>
+                          <Button>Sign-in</Button>
 
                             
 
