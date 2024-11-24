@@ -100,6 +100,18 @@ type PayloadItem = {
   payload: any
 }
 
+//Converting to hours and minutes
+const valueFormatter = (value: number): string => {
+  const hours = Math.floor(value);
+  const minutes = Math.round((value - hours) * 60);
+  if (minutes == 0)
+    return `${hours} hours`;
+  else if (hours ==0)
+    return `${minutes} minutes`;
+  else
+    return `${hours} hours ${minutes} minutes`;
+};
+
 interface ChartTooltipProps {
   active: boolean | undefined
   payload: PayloadItem[]
@@ -199,7 +211,7 @@ interface BarChartProps extends React.HTMLAttributes<HTMLDivElement> {
   data: Record<string, any>[]
   index: string
   categories: string[]
-  colors?: AvailableChartColorsKeys[]
+  colors: AvailableChartColorsKeys[]
   valueFormatter?: (value: number) => string
   startEndOnly?: boolean
   showXAxis?: boolean
