@@ -59,7 +59,11 @@ function Stopwatch() {
     };
 
     const handleSubButtonClick = (activity: string) => {
-        alert(`Tracking: ${activity}`);
+        // Check if the timer is not running
+        if (!isRunning) {
+            setElapsedTime(0); // Reset the elapsed time
+        }
+        //çalert(`Tracking: ${activity}`);
     };
 
     return (
@@ -104,7 +108,6 @@ function Stopwatch() {
                                 onClick={() => handleSubButtonClick("Studying")}
                                 onMouseEnter={(e) => (e.target as HTMLButtonElement).style.backgroundColor = "#B39DDB"} // Darker purple
                                 onMouseLeave={(e) => (e.target as HTMLButtonElement).style.backgroundColor = "#D1C4E9"} // Darker purple
-
                             >
                                 Studying
                             </Button>
