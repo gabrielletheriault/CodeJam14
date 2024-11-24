@@ -1,11 +1,9 @@
+/*globals.css*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono&display=swap');
 
-body {
-  font-family: 'Geist Mono', monospace;
-}
+
 
 @layer base {
   :root {
@@ -70,6 +68,6 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply font-geist bg-background text-foreground;
   }
 }
