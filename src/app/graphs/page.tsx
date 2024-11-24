@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react"; // Import useState to manage state
 import { StudyChartHero } from "@/components/StudyChartHero";
 import { ExerciseChartHero } from "@/components/ExerciseChartHero";
 import { HobbyChartHero } from "@/components/HobbyChartHero";
@@ -31,23 +30,12 @@ const Page = () => {
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div style={{ marginTop: "90px" }}></div>
-      <div style={{ marginTop: "90px" }}></div>
       <h1 className="text-[64px] font-bold text-left">This Week at a Glance</h1>
-      <div style={{ marginTop: "40px" }}></div>
 
       {/* Render the Tabs component, passing the tabs array */}
       <TabsGraph tabs={tabs} />
     </div>
   );
 };
-
-// Helper function to format time as HH:MM:SS
-const formatTime = (time: number) => {
-  const hours = Math.floor(time / (1000 * 60 * 60));
-  const minutes = Math.floor((time / (1000 * 60)) % 60);
-  const seconds = Math.floor((time / 1000) % 60);
-
-  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-}
 
 export default Page;
