@@ -6,7 +6,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { User } from "./model/user-model";
 import bcrypt from "bcryptjs";
 
-
 export const {
     handlers: { GET, POST },
     auth,
@@ -14,24 +13,28 @@ export const {
     signOut,
 } = NextAuth({
     session: {
-      strategy: 'jwt',
+        strategy: 'jwt',
     },
     providers: [
         CredentialsProvider({
             credentials: {
-                email: {},
-                password: {},
+                email: { label: "Email", type: "email", placeholder: "email@example.com" },
+                password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
+                // Ensure `credentials` is defined
                 if (!credentials || !credentials.email || !credentials.password) {
                     throw new Error("Missing credentials");
                 }
-                
+
                 try {
+                    // Find the user in the database
                     const user = await User.findOne({
-                        email: credentials?.email
-                    })
+                        email: credentials.email
+                    });
                     console.log(user);
+
+                    // If user exists, validate the password
                     if (user) {
                         const isMatch = await bcrypt.compare(
                             credentials.password,
@@ -39,7 +42,11 @@ export const {
                         );
 
                         if (isMatch) {
-                            return user;
+                            return {
+                                id: user.id,
+                                name: user.name,
+                                email: user.email,
+                            };
                         } else {
                             throw new Error("Email or Password is not correct");
                         }
