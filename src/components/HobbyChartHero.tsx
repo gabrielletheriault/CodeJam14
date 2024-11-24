@@ -48,7 +48,7 @@ export const HobbyChartHero = () => {
     return (
         <div className="relative">
             {/* Cumulative time box positioned above the chart with adjusted size */}
-            <div className="absolute top-[-220px] right-4 p-8 bg-blue-500 text-white rounded-lg shadow-lg">
+            <div className="absolute top-[-220px] right-4 p-8 bg-primary text-white rounded-lg shadow-lg w-[240px]">
                 {/* Weekly Summary label positioned in the top left */}
                 <p className="text-xl font-semibold absolute top-4 left-4">Weekly Summary:</p>
                 
