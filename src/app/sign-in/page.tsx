@@ -76,6 +76,9 @@ const Page = () => {
                           </div>
 
                           <Button>Register</Button>
+
+                            
+
                       </div>
                   </form>
               </div>
