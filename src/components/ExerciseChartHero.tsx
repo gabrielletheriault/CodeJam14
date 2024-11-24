@@ -6,23 +6,23 @@ import { AvailableChartColors } from "@/lib/chartUtils"
 const chartdata = [
     {
         date: "Sunday",
-        Studying: 4,
+        Studying: 0,
     },
     {
         date: "Monday",
-        Studying: 0.28,
+        Studying: 0,
     },
     {
         date: "Tuesday",
-        Studying: 3.5,
+        Studying: 0,
     },
     {
         date: "Wednesday",
-        Studying: 3,
+        Studying: 8,
     },
     {
         date: "Thursday",
-        Studying: 0,
+        Studying: 2,
     },
     {
         date: "Friday",
@@ -30,11 +30,11 @@ const chartdata = [
     },
     {
         date: "Saturday",
-        Studying: 1.4746384589,
+        Studying: 6,
     },
 ]
 
-export const BarChartHero = () => {
+export const ExerciseChartHero = () => {
     const valueFormatter = (number: number) => {
         const hours = Math.floor(number) // Get the whole number of hours
         const minutes = Math.round((number - hours) * 60) // Get the remaining minutes

@@ -127,11 +127,11 @@ function Stopwatch() {
                                     color: "#4A148C",
                                     transition: "background-color 0.3s ease",
                                 }}
-                                onClick={() => handleSubButtonClick("Reading")}
+                                onClick={() => handleSubButtonClick("Hobbies")}
                                 onMouseEnter={(e) => e.target.style.backgroundColor = "#B39DDB"} // Darker purple
                                 onMouseLeave={(e) => e.target.style.backgroundColor = "#D1C4E9"} // Original color
                             >
-                                Reading
+                                Hobbies
                             </Button>
                         </div>
                     )}
