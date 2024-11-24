@@ -1,10 +1,8 @@
+/*layout.tsx*/
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Tab from "@/components/Tab";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,15 +16,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Add the Geist Mono font */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body
-        className={cn("relative h-full font-mono", inter.className)}>
-          <main className="relative flex flex-col min-h-screen">
-            <div className="flex-grow flex-1">
-              <Tab/>
-              {children}
-            </div>
-          </main>
-          
+        className={cn("relative h-full font-geist antialiased")} // Use font-geist class here
+      >
+        <main className="relative flex flex-col min-h-screen">
+          <div className="flex-grow flex-1">
+            <Tab />
+            {children}
+          </div>
+        </main>
       </body>
     </html>
   );

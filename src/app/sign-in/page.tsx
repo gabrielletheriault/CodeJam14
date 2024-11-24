@@ -6,10 +6,8 @@ import { Label } from "@/components/ui/label"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { doCredentialLogin } from "@/app/actions";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 
 const Page = () => {
 
@@ -20,7 +18,6 @@ const Page = () => {
         event.preventDefault();
         try {
             const formData = new FormData(event.currentTarget);
-
             const response = await doCredentialLogin(formData);
 
             if (!!response.error) {
@@ -37,8 +34,8 @@ const Page = () => {
 
     return (
     <>
-        <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
-            <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+            <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] bg-white p-6 rounded-lg shadow-md">
                 <div className="flex flex-col items-center space-y-2 text-center">
                     <h1 className="text-2xl font-bold">
                         Sign in to your account
@@ -76,7 +73,6 @@ const Page = () => {
                                   id="password"
                                   placeholder="Password"
                               />
-
                           </div>
 
                           <Button>Register</Button>
@@ -85,7 +81,8 @@ const Page = () => {
               </div>
             </div>
         </div>
-    </>)
+    </>
+    );
 }
 
-export default Page
+export default Page;
