@@ -11,7 +11,7 @@ const Tab = async () => {
                 <MaxWidthWrapper>
                     <div className="flex h-16 items-center justify-center">
                         <div className="flex space-x-4">
-                            <Link href="/" className={`${buttonVariants({ variant: "ghost" })} text-xl flex items-center`} >Timer <Timer/> </Link>
+                            <Link href="/timer" className={`${buttonVariants({ variant: "ghost" })} text-xl flex items-center`} >Timer <Timer/> </Link>
                             <Link href="/graphs" className={`${buttonVariants({ variant: "ghost" })} text-xl flex items-center`}>Graphs <ChartColumn/> </Link>        
                         </div>                       
                     </div>
