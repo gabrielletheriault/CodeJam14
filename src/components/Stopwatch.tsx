@@ -47,11 +47,28 @@ function Stopwatch() {
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
     };
 
+    const trash = () => {
+        if (!isRunning) {
+            setElapsedTime(0);
+        }
+    };
+
+    const record = () => {
+        if (!isRunning) {
+        }
+    };
+
     return (
         <div>
             <p>{formatTime()}</p>
             <Button onClick={start}>Start</Button>
             <Button onClick={stop}>Stop</Button>
+            <div style={{ marginTop: "10px" }}></div>
+            <hr style={{ marginTop: "20px", marginBottom: "20px" }} />
+            <div style={{ marginTop: "10px" }}></div>
+            <Button onClick={trash}>Trash</Button>
+            <Button onClick={record}>Record</Button>
+
         </div>
     );
 }
